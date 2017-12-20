@@ -4,14 +4,35 @@ import { Add } from 'material-ui-icons';
 import TimerForm from './TimerForm';
 
 class ToggleableTimerForm extends React.Component {
+
+  state = {
+    isOpen: false
+  };
+
+  handleFormOpen = () => {
+    this.setState({isOpen: true});
+  };
+
+  handleFormSubmit = (timer) => {
+    this.props.onFormSubmit(timer);
+    this.setState({isOpen: false});
+  };
+
+  handleFormClose = () => {
+    this.setState({isOpen: false});
+  };
+
   render() {
-    if (this.props.isOpen) {
+    if (this.state.isOpen) {
       return (
-        <TimerForm />
+        <TimerForm
+          onFormSubmit={this.handleFormSubmit}
+          onFormClose={this.handleFormClose}
+        />
       );
     } else {
       return (
-        <Add />
+        <Add onClick={this.handleFormOpen} />
       );
     }
   }

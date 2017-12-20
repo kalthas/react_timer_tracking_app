@@ -1,3 +1,15 @@
+import uuid from 'uuid';
+
+const newTimer = (attrs = {}) => {
+  const timer = {
+    title: attrs.title || 'Timer',
+    project: attrs.project || 'Project',
+    id: uuid.v4(),
+    elapsed: 0
+  };
+  return timer;
+}
+
 const pad = (numberString, size) => {
   let padded = numberString;
   while (padded.length < size)
@@ -13,7 +25,8 @@ const millisecondsToHuman = (ms) => {
     pad(hours.toString(), 2),
     pad(minutes.toString(), 2),
     pad(seconds.toString(), 2)
-  ].join(':')
+  ].join(':');
+  return humanized;
 }
 
 const renderElapsedString = (elapsed, runningSince) => {
@@ -25,6 +38,7 @@ const renderElapsedString = (elapsed, runningSince) => {
 }
 
 export {
+  newTimer,
   millisecondsToHuman,
   renderElapsedString
 }
