@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 class TimerForm extends React.Component {
 
   state = {
-    title: this.props.state || '',
+    title: this.props.title || '',
     project: this.props.project || ''
   };
 

@@ -6,7 +6,46 @@ import { Delete, Edit } from 'material-ui-icons';
 
 import { renderElapsedString } from './helpers';
 
+class TimerActionButton extends React.Component {
+  render() {
+    if (this.props.timerIsRunning) {
+      return (
+        <Button raised color='accent' onClick={this.props.onStopClick} >
+          Stop
+        </Button>
+      );
+    } else {
+      return (
+        <Button raised color='primary' onClick={this.props.onStartClick} >
+          Start
+        </Button>
+      );
+    }
+  }
+}
+
 class Timer extends React.Component {
+
+  componentDidMount() {
+    this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.forceUpdateInterval);
+  }
+
+  handleTrashClick = () => {
+    this.props.onTrashClick(this.props.id);
+  };
+
+  handleStartClick = () => {
+    this.props.onStartClick(this.props.id);
+  };
+
+  handleStopClick = () => {
+    this.props.onStopClick(this.props.id);
+  };
+
   render() {
     const elapsedString = renderElapsedString(this.props.elapsed, this.props.runningSince);
     return (
@@ -21,15 +60,17 @@ class Timer extends React.Component {
           <div>
             {elapsedString}
             <div>
-              <Delete />
-              <Edit />
+              <Delete onClick={this.handleTrashClick} />
+              <Edit onClick={this.props.onEditClick} />
             </div>
           </div>
         </CardContent>
         <CardActions>
-          <Button raised color='accent'>
-            Stop
-          </Button>
+          <TimerActionButton
+            timerIsRunning={!!this.props.runningSince}
+            onStartClick={this.handleStartClick}
+            onStopClick={this.handleStopClick}
+          />
         </CardActions>
       </Card>
     );

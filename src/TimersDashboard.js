@@ -48,6 +48,75 @@ class TimersDashboard extends React.Component {
     });
   };
 
+  handleEditFormSubmit = (attrs) => {
+    this.updateTimer(attrs);
+  };
+
+  updateTimer = (attrs) => {
+    this.setState({
+      timers: this.state.timers.map((timer) => {
+        if (timer.id == attrs.id) {
+          return Object.assign({}, timer, {
+            title: attrs.title,
+            project: attrs.project
+          });
+        } else {
+          return timer;
+        }
+      })
+    });
+  };
+
+  handleTrashClick = (timerId) => {
+    this.deleteTimer(timerId);
+  };
+
+  deleteTimer = (timerId) => {
+    this.setState({
+      timers: this.state.timers.filter(t => t.id !== timerId)
+    });
+  };
+
+  handleStartClick = (timerId) => {
+    this.startTimer(timerId);
+  };
+
+  startTimer = (timerId) => {
+    const now = Date.now();
+    this.setState({
+      timers: this.state.timers.map((timer) => {
+        if (timer.id === timerId) {
+          return Object.assign({}, timer, {
+            runningSince: now
+          });
+        } else {
+          return timer;
+        }
+      })
+    });
+  };
+
+  stopTimer = (timerId) => {
+    const now = Date.now();
+    this.setState({
+      timers: this.state.timers.map((timer) => {
+        if (timer.id === timerId) {
+          const lastElapsed = now - timer.runningSince;
+          return Object.assign({}, timer, {
+            elapsed: timer.elapsed + lastElapsed,
+            runningSince: null
+          });
+        } else {
+          return timer;
+        }
+      })
+    });
+  };
+
+  handleStopClick = (timerId) => {
+    this.stopTimer(timerId);
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -55,6 +124,10 @@ class TimersDashboard extends React.Component {
         <Grid item xs={12}>
           <EditableTimerList
             timers={this.state.timers}
+            onFormSubmit={this.handleEditFormSubmit}
+            onTrashClick={this.handleTrashClick}
+            onStartClick={this.handleStartClick}
+            onStopClick={this.handleStopClick}
           />
         </Grid>
         <Grid item xs={12}>
